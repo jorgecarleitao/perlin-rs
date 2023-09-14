@@ -1,0 +1,8 @@
+[package]
+name = "perlin"
+description = "Improved perlin noise in 2D and 3D"
+version = "0.1.0"
+edition = "2021"
+
+[dev-dependencies]
+image = "*"
