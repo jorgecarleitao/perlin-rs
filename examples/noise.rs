@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use perlin;
+use noise_perlin::perlin_2d;
 
 fn main() {
     let width = 256;
@@ -18,7 +18,7 @@ fn main() {
         let y = (i % height) as f32;
         let y = y / height as f32;
 
-        let mut v = perlin::perlin_2d(x * scale + offset, y * scale + offset);
+        let mut v = perlin_2d(x * scale + offset, y * scale + offset);
         v = v * constant + 0.5;
         *pixel = (v * 255.0) as u8;
     });

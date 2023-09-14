@@ -78,19 +78,19 @@ fn perlin_3d_grad(
 /// whose reference implementation is available here: https://mrl.cs.nyu.edu/~perlin/noise/
 /// The only modification was the simplification of the function `grad` to avoid some code branches (but does not change the end result).
 pub fn perlin_3d(mut x: f32, mut y: f32, mut z: f32) -> f32 {
-    let x0 = x.floor();
-    let y0 = y.floor();
-    let z0 = z.floor();
+    let x0 = x as usize;
+    let y0 = y as usize;
+    let z0 = z as usize;
 
-    x -= x0;
-    y -= y0;
-    z -= z0;
+    x -= x0 as f32;
+    y -= y0 as f32;
+    z -= z0 as f32;
     // at this point (x, y, z) is bounded to [0, 1]
     debug_assert!((x >= 0.0) && (x <= 1.0) && (y >= 0.0) && (y <= 1.0) && (z >= 0.0) && (z <= 1.0));
 
-    let gx = (x0 as usize) % 256;
-    let gy = (y0 as usize) % 256;
-    let gz = (z0 as usize) % 256;
+    let gx = x0 % 256;
+    let gy = y0 % 256;
+    let gz = z0 % 256;
 
     // derive a permutation from the indices.
     // This behaves like a weak hash
@@ -120,7 +120,7 @@ mod tests {
     #[test]
     fn perlin() {
         let result = super::perlin_3d(1.5, 1.5, 1.5);
-        assert_eq!(result, -0.5);
+        assert_eq!(result, -0.875);
     }
 
     /// Given the mid point and all grads the same

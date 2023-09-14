@@ -1,8 +1,11 @@
 [package]
-name = "perlin"
+name = "noise_perlin"
 description = "Improved perlin noise in 2D and 3D"
-version = "0.1.0"
+version = "1.0.0"
+license = "MIT"
 edition = "2021"
+homepage = "https://github.com/jorgecarleitao/perlin-rs"
+repository = "https://github.com/jorgecarleitao/perlin-rs"
 
 [dev-dependencies]
-image = "*"
+image = "0.24"

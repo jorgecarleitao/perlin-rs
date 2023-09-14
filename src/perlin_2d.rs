@@ -49,16 +49,16 @@ fn perlin_2d_grad(x: f32, y: f32, g00: usize, g10: usize, g01: usize, g11: usize
 /// * made it 2d, ignoring the z coordinate
 /// * the grad computation was modified
 pub fn perlin_2d(mut x: f32, mut y: f32) -> f32 {
-    let x0 = x.floor();
-    let y0 = y.floor();
+    let x0 = x as usize;
+    let y0 = y as usize;
 
-    x -= x0;
-    y -= y0;
+    x -= x0 as f32;
+    y -= y0 as f32;
     // at this point (x, y) is bounded to [0, 1]
     debug_assert!((x >= 0.0) && (x <= 1.0) && (y >= 0.0) && (y <= 1.0));
 
-    let gx = (x0 as usize) % 256;
-    let gy = (y0 as usize) % 256;
+    let gx = x0 % 256;
+    let gy = y0 % 256;
 
     // derive a permutation from the indices.
     // This behaves like a weak hash

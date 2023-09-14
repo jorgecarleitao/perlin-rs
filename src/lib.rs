@@ -1,5 +1,6 @@
 //! Perlin noise in 2D and 3D. Translated from the reference Java implementation at
 //! https://mrl.cs.nyu.edu/~perlin/noise/ and https://mrl.cs.nyu.edu/~perlin/paper445.pdf
+#![no_std]
 #[forbid(unsafe_code)]
 mod perlin_2d;
 mod perlin_3d;

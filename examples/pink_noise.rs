@@ -1,7 +1,6 @@
-//! Uses perlin to
 use std::path::Path;
 
-use perlin;
+use noise_perlin::perlin_2d;
 
 static SQRT_2_OVER_2: f32 = 0.70710678118;
 
@@ -19,16 +18,17 @@ fn apply_noise(
         let y = (i % height) as f32;
         let y = y / height as f32;
 
-        let mut v = perlin::perlin_2d(x * frequency + offset, y * frequency + offset);
+        let mut v = perlin_2d(x * frequency + offset, y * frequency + offset);
         v = v * SQRT_2_OVER_2 + 0.5;
         *entry += v * amplitude;
     });
 }
 
 fn main() {
-    let width = 256;
+    let width = 512;
     let height = width;
 
+    // alpha of the pink noise, the scaling of amplitude with frequency
     let alpha: f32 = 1.0;
 
     let mut values = vec![0.0f32; height * width];
@@ -47,7 +47,7 @@ fn main() {
         .collect::<Vec<_>>();
 
     image::save_buffer(
-        &Path::new("image.png"),
+        &Path::new("pink.png"),
         &bytes,
         width as u32,
         height as u32,
