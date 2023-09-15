@@ -13,7 +13,7 @@ fn apply_noise(
     values: &mut Vec<f32>,
 ) {
     (values.iter_mut().enumerate()).for_each(|(i, entry)| {
-        let x = (i / width) as f32;
+        let x = (i % width) as f32;
         let x = x / width as f32;
         let y = (i % height) as f32;
         let y = y / height as f32;

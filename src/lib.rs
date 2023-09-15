@@ -4,13 +4,20 @@
 #[forbid(unsafe_code)]
 mod perlin_2d;
 mod perlin_3d;
-pub use perlin_2d::perlin_2d;
+pub use perlin_2d::{perlin_2d, perlin_2d_derivative};
 pub use perlin_3d::perlin_3d;
 
 #[inline]
 fn fade(t: f32) -> f32 {
     debug_assert!(t <= 1.0);
     t * t * t * (t * (t * 6.0 - 15.0) + 10.0)
+}
+
+#[inline]
+fn fade_prime(t: f32) -> f32 {
+    // https://www.wolframalpha.com/input?i=D%5Bt+*+t+*+t+*+%28t+*+%28t+*+6.0+-+15.0%29+%2B+10.0%29%2C+t%5D
+    debug_assert!(t <= 1.0);
+    t * t * (1.0 - t) * (1.0 - t) * 30.0
 }
 
 #[inline]
@@ -47,3 +54,19 @@ static PERM: [usize; 512] = [
     176, 115, 121, 50, 45, 127, 4, 150, 254, 138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243, 141,
     128, 195, 78, 66, 215, 61, 156, 180,
 ];
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn fade_prime() {
+        let a = super::fade(0.5);
+        let df_dt = super::fade_prime(0.5);
+        let h = 0.001;
+        let b = super::fade(0.5 + h);
+        //  f(t+h) - f(t) = h * df/dt
+        let result = b - a;
+        let expected = df_dt * h;
+        //  (+/- f32 epsilon)
+        assert_eq!((result * 100000.0) as isize, (expected * 100000.0) as isize);
+    }
+}

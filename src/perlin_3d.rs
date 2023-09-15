@@ -10,15 +10,15 @@ fn grad_3d(hash: usize, x: f32, y: f32, z: f32) -> f32 {
     // in the paper.
     match hash % 16 {
         // z = 0
-        0 => x + y,   // (1,1,0)
-        1 => -x + y,  // (-1,1,0)
-        2 => x - y,   // (1,-1,0)
-        3 => -x - y,  // (-1,-1,0)
+        0 => x + y,  // (1,1,0)
+        1 => -x + y, // (-1,1,0)
+        2 => x - y,  // (1,-1,0)
+        3 => -x - y, // (-1,-1,0)
         // y = 0
-        4 => x + z,   // (1,0,1)
-        5 => -x + z,  // (-1,0,1)
-        6 => x - z,   // (1,0,-1)
-        7 => -x - z,  // (-1,0,-1)
+        4 => x + z,  // (1,0,1)
+        5 => -x + z, // (-1,0,1)
+        6 => x - z,  // (1,0,-1)
+        7 => -x - z, // (-1,0,-1)
         // x = 0
         8 => y + z,   // (0,1,1)
         9 => -y + z,  // (0,-1,1)
@@ -125,7 +125,7 @@ mod tests {
 
     /// Given the mid point and all grads the same
     /// Then the noise is zero
-    /// 
+    ///
     /// This is because the mid point is always the average over every direction of every corner.
     /// When the direction of every corner is the same, the average is zero.
     #[test]
