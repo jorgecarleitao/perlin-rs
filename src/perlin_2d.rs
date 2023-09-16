@@ -173,41 +173,54 @@ mod tests {
         assert_eq!(result, 0.0);
     }
 
+    fn test_df_dx(x: f32, y: f32) {
+        let (f_xy, der) = super::eval_grad(x, y, 0, 0, 0, 0);
+
+        // df/dx
+        // negative partial derivative over x => noise decreases when x increases
+        let h = 0.00001;
+        let (f_xhy, _) = super::eval_grad(x + h, y, 0, 0, 0, 0);
+
+        // f(x+h,y) - f(x,y) = h * df(x,y)/dx
+        let result = f_xhy - f_xy;
+        let expected = der[0] * h;
+        // (+/- f32 epsilon)
+        let difference = (expected - result) / expected;
+        // within 20%
+        assert!((difference.abs() < 0.2));
+    }
+
+    fn test_df_dy(x: f32, y: f32) {
+        let (f_xy, der) = super::eval_grad(x, y, 0, 0, 0, 0);
+
+        // df/dy
+        // negative partial derivative over x => noise decreases when x increases
+        let h = 0.00001;
+        let (f_xhy, _) = super::eval_grad(x, y + h, 0, 0, 0, 0);
+
+        // f(x+h,y) - f(x,y) = h * df(x,y)/dx
+        let result = f_xhy - f_xy;
+        let expected = der[1] * h;
+        // (+/- f32 epsilon)
+        let difference = (expected - result) / expected;
+        // within 20%
+        assert!((difference.abs() < 0.2));
+    }
+
     #[test]
     fn eval_grad() {
         // value is correct
         let (f_xy, _) = super::eval_grad(0.5, 0.0, 0, 0, 0, 0);
         assert_eq!(f_xy, 0.0);
 
-        let (f_xy, der) = super::eval_grad(0.5, 0.1, 0, 0, 0, 0);
+        for x in 1..10 {
+            for y in 1..10 {
+                test_df_dx(x as f32 * 0.1, y as f32 * 0.1);
+                test_df_dy(x as f32 * 0.1, y as f32 * 0.1);
+            }
+        }
 
-        // df/dx
-        // negative partial derivative over x => noise decreases when x increases
-        let h = 0.001;
-        let (f_xhy, _) = super::eval_grad(0.5 + h, 0.1, 0, 0, 0, 0);
-
-        // f(x+h,y) - f(x,y) = h * df(x,y)/dx
-        let result = f_xhy - f_xy;
-        let expected = der[0] * h;
-        // (+/- f32 epsilon)
-        assert_eq!(
-            (result * 100000.0) as isize,
-            (expected * 100000.0) as isize
-        );
-
-        // df/dy
-        let (f_xy, der) = super::eval_grad(0.1, 0.5, 0, 0, 0, 0);
-        let h = 0.001;
-        let (f_xyh, _) = super::eval_grad(0.1, 0.5 + h, 0, 0, 0, 0);
-        // f(x,y+h) - f(x,y) = h * df(x,y)/dy
-        let result = f_xyh - f_xy;
-        let expected = der[1] * h;
-        assert_eq!(
-            (result * 100000.0) as isize,
-            (expected * 100000.0) as isize
-        );
-
-        // df/dy
+        // df/dx + df/dy
         let (f_xy, d) = super::eval_grad(0.2, 0.2, 0, 0, 0, 0);
         let hx = 0.0001;
         let hy = 0.0002;
@@ -215,9 +228,6 @@ mod tests {
         // f(x+h1,y+h2) - f(x,y) = h1 * df(x,y)/dx + h2 * df(x,y)/dy
         let result = f_xhyh - f_xy;
         let expected = d[0] * hx + d[1] * hy;
-        assert_eq!(
-            (result * 100000.0) as isize,
-            (expected * 100000.0) as isize
-        );
+        assert_eq!((result * 100000.0) as isize, (expected * 100000.0) as isize);
     }
 }

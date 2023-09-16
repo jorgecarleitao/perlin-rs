@@ -14,7 +14,7 @@ fn main() {
     let offset = 0.0;
 
     (bytes.iter_mut().enumerate()).for_each(|(i, pixel)| {
-        let x = (i % width) as f32;
+        let x = (i / width) as f32;
         let x = x / width as f32;
         let y = (i % height) as f32;
         let y = y / height as f32;
